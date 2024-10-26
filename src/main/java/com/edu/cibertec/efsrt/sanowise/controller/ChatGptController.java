@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/analyze")
@@ -22,7 +24,10 @@ public class ChatGptController {
 
     @PostMapping("/image-text")
     public Mono<String> analyzeImage(@RequestBody @Valid RequestDto request) {
-        return chatGptService.pruebaImagen(request);
+        request.setPreferencias(List.of("Evitar productos con gluten", "Preferir productos orgánicos", "Sin azúcar añadido"));
+        var respuesta = chatGptService.pruebaImagen(request);
+        System.out.println(respuesta.block());
+        return respuesta;
     }
 
     @GetMapping("/prueba")
